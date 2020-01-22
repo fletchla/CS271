@@ -17,4 +17,88 @@ CHIP Mux4Way16 {
 
     PARTS:
     // Put your code here:
+	Not(in=sel[0],out=notSel0);
+	Not(in=sel[1],out=notSel1);
+	
+	//sel is 00
+	And(a=notSel0,b=notSel1,out=selIs00);
+	
+	//sel is 01
+	And(a=notSel0,b=sel[1],out=selIs01);
+	
+	//sel is 10
+	And(a=sel[0],b=notSel1,out=selIs10);
+	
+	//sel is 11
+	And(a=sel[0],b=sel[1],out=selIs11);
+	
+	//4 cases of sel and 0th inputs a-d
+	And(a=selIs00,b=a[0],out=a0andSelIs00);
+	And(a=selIs01,b=b[0],out=b0andSelIs01);
+	Or(a=a0andSel00,b=b0andSel01,out=a0orB0);
+	And(a=selIs10,b=c[0],out=c0andSelIs10);
+	And(a=selIs11,b=d[0],out=d0andSelIs11);
+	Or(a=c0andSel10,b=d0andSel11,out=c0orD0);
+	
+	Or(a=a0orB0,b=c0orD0,out=out[0]);
+	
+	//4 cases of sel and 1th inputs a-d
+	And(a=selIs00,b=a[1],out=a1andSelIs00);
+	And(a=selIs01,b=b[1],out=b1andSelIs01);
+	Or(a=a1andSelIs00,b=b1andSelIs01,out=a1orB1);
+	And(a=selIs10,b=c[1],out=c1andSelIs10);
+	And(a=selIs11,b=d[1],out=d1andSelIs11);
+	Or(a=c1andSelIs10,b=d1andSelIs11,out=c1orD1);
+	
+	Or(a=a1orB1,b=c1orD1,out=out[1]);
+	
+	//4 cases of sel and 2th inputs a-d
+	And(a=selIs00,b=a[1],out=a1andSelIs00);
+	And(a=selIs01,b=b[1],out=b1andSelIs01);
+	Or(a=,b=,out=);
+	And(a=selIs10,b=c[1],out=c1andSelIs10);
+	And(a=selIs11,b=d[1],out=d1andSelIs11);
+	Or(a=,b=,out=);
+	
+	Or(a=,b=,out=out[1]);
+	
+	//4 cases of sel and 3th inputs a-d
+	And(a=selIs00,b=a[1],out=a1andSelIs00);
+	And(a=selIs01,b=b[1],out=b1andSelIs01);
+	Or(a=,b=,out=);
+	And(a=selIs10,b=c[1],out=c1andSelIs10);
+	And(a=selIs11,b=d[1],out=d1andSelIs11);
+	Or(a=,b=,out=);
+	
+	Or(a=,b=,out=out[1]);
+	
+	//4 cases of sel and 4th inputs a-d
+	And(a=selIs00,b=a[1],out=a1andSelIs00);
+	And(a=selIs01,b=b[1],out=b1andSelIs01);
+	Or(a=,b=,out=);
+	And(a=selIs10,b=c[1],out=c1andSelIs10);
+	And(a=selIs11,b=d[1],out=d1andSelIs11);
+	Or(a=,b=,out=);
+	
+	Or(a=,b=,out=out[1]);
+	
+	//4 cases of sel and 5th inputs a-d
+	And(a=selIs00,b=a[1],out=a1andSelIs00);
+	And(a=selIs01,b=b[1],out=b1andSelIs01);
+	Or(a=,b=,out=);
+	And(a=selIs10,b=c[1],out=c1andSelIs10);
+	And(a=selIs11,b=d[1],out=d1andSelIs11);
+	Or(a=,b=,out=);
+	
+	Or(a=,b=,out=out[1]);
+	
+	//4 cases of sel and 6th inputs a-d
+	And(a=selIs00,b=a[1],out=a1andSelIs00);
+	And(a=selIs01,b=b[1],out=b1andSelIs01);
+	Or(a=,b=,out=);
+	And(a=selIs10,b=c[1],out=c1andSelIs10);
+	And(a=selIs11,b=d[1],out=d1andSelIs11);
+	Or(a=,b=,out=);
+	
+	Or(a=,b=,out=out[1]);
 }

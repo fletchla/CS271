@@ -9,11 +9,13 @@
  *       0 otherwise
  */
 
+
 CHIP And {
     IN a, b;
     OUT out;
 
     PARTS:
     // Put your code here
-	//la;ksdjf;laksjdf
+	Nand(a=a,b=b,out=c);
+	Not(in=c,out=out);
 }
