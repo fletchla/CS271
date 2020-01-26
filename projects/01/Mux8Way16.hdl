@@ -18,34 +18,7 @@ CHIP Mux8Way16 {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
-	Not(in=sel[0],out=notSel0);
-	Not(in=sel[1],out=notSel1);
-	Not(in=sel[2],out=notSel2);
-	
-	//sel is 000
-	And(a=notSel0,b=notSel1,out=selIs000);
-	
-	//sel is 001
-	And(a=notSel0,b=sel[1],out=selIs001);
-	
-	//sel is 010
-	And(a=sel[0],b=notSel1,out=selIs010);
-	
-	//sel is 011
-	And(a=sel[0],b=sel[1],out=selIs011);
-	
-	//sel is 100
-	And(a=notSel0,b=notSel1,out=selIs100);
-	
-	//sel is 101
-	And(a=sel[0],b=sel[1],out=selIs101);
-	
-	//sel is 110
-	And(a=notSel0,b=sel[1],out=selIs110);
-	
-	//sel is 111
-	And(a=sel[0],b=notSel1,out=selIs111);
-	
-	
+	Mux4Way16(a=a,b=b,c=c,d=d,sel[0]=sel[0],sel[1]=sel[1],out=Mux4WayAD);
+	Mux4Way16(a=e,b=f,c=g,d=h,sel[0]=sel[0],sel[1]=sel[1],out=Mux4WayEH);
+	Mux16(a=Mux4WayAD,b=Mux4WayEH,sel=sel[2],out=out);	
 }

@@ -1,0 +1,194 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/Mux4Way16.hdl
+
+/**
+ * 4-way 16-bit multiplexor:
+ * out = a if sel == 00
+ *       b if sel == 01
+ *       c if sel == 10
+ *       d if sel == 11
+ */
+
+CHIP Mux4Way16 {
+    IN a[16], b[16], c[16], d[16], sel[2];
+    OUT out[16];
+
+    PARTS:
+    // Put your code here:
+    Not(in=sel[0],out=notSel0);
+	Not(in=sel[1],out=notSel1);
+	
+	//sel is 00
+	And(a=notSel0,b=notSel1,out=selIs00);
+	
+	//sel is 01
+	And(a=notSel0,b=sel[1],out=selIs01);
+	
+	//sel is 10
+	And(a=sel[0],b=notSel1,out=selIs10);
+	
+	//sel is 11
+	And(a=sel[0],b=sel[1],out=selIs11);
+	
+	//4 cases of sel and 0th inputs a-d DONE
+	And(a=selIs00,b=a[0],out=a0andSelIs00);
+	And(a=selIs01,b=b[0],out=b0andSelIs01);
+	Or(a=a0andSelIs00,b=b0andSelIs01,out=a0orB0);
+	And(a=selIs10,b=c[0],out=c0andSelIs10);
+	And(a=selIs11,b=d[0],out=d0andSelIs11);
+	Or(a=c0andSelIs10,b=d0andSelIs11,out=c0orD0);
+	
+	Or(a=a0orB0,b=c0orD0,out=out[0]);
+	
+	//4 cases of sel and 1th inputs a-d DONE
+	And(a=selIs00,b=a[1],out=a1andSelIs00);
+	And(a=selIs01,b=b[1],out=b1andSelIs01);
+	Or(a=a1andSelIs00,b=b1andSelIs01,out=a1orB1);
+	And(a=selIs10,b=c[1],out=c1andSelIs10);
+	And(a=selIs11,b=d[1],out=d1andSelIs11);
+	Or(a=c1andSelIs10,b=d1andSelIs11,out=c1orD1);
+	
+	Or(a=a1orB1,b=c1orD1,out=out[1]);
+	
+	//4 cases of sel and 2th inputs a-d DONE
+	And(a=selIs00,b=a[2],out=a2andSelIs00);
+	And(a=selIs01,b=b[2],out=b2andSelIs01);
+	Or(a=a2andSelIs00,b=b2andSelIs01,out=a2orB2);
+	And(a=selIs10,b=c[2],out=c2andSelIs10);
+	And(a=selIs11,b=d[2],out=d2andSelIs11);
+	Or(a=c2andSelIs10,b=d2andSelIs11,out=c2orD2);
+	
+	Or(a=a2orB2,b=c2orD2,out=out[2]);
+	
+	//4 cases of sel and 3th inputs a-d DONE
+	And(a=selIs00,b=a[3],out=a3andSelIs00);
+	And(a=selIs01,b=b[3],out=b3andSelIs01);
+	Or(a=a3andSelIs00,b=b3andSelIs01,out=a3orB3);
+	And(a=selIs10,b=c[3],out=c3andSelIs10);
+	And(a=selIs11,b=d[3],out=d3andSelIs11);
+	Or(a=c3andSelIs10,b=d3andSelIs11,out=c3orD3);
+	
+	Or(a=a3orB3,b=c3orD3,out=out[3]);
+	
+	//4 cases of sel and 4th inputs a-d DONE
+	And(a=selIs00,b=a[4],out=a4andSelIs00);
+	And(a=selIs01,b=b[4],out=b4andSelIs01);
+	Or(a=a4andSelIs00,b=b4andSelIs01,out=a4orB4);
+	And(a=selIs10,b=c[4],out=c4andSelIs10);
+	And(a=selIs11,b=d[4],out=d4andSelIs11);
+	Or(a=c4andSelIs10,b=d4andSelIs11,out=c4orD4);
+	
+	Or(a=a4orB4,b=c4orD4,out=out[4]);
+	
+	//4 cases of sel and 5th inputs a-d DONE
+	And(a=selIs00,b=a[5],out=a5andSelIs00);
+	And(a=selIs01,b=b[5],out=b5andSelIs01);
+	Or(a=a5andSelIs00,b=b5andSelIs01,out=a5orB5);
+	And(a=selIs10,b=c[5],out=c5andSelIs10);
+	And(a=selIs11,b=d[5],out=d5andSelIs11);
+	Or(a=c5andSelIs10,b=d5andSelIs11,out=c5orD5);
+	
+	Or(a=a5orB5,b=c5orD5,out=out[5]);
+	
+	//4 cases of sel and 6th inputs a-d DONE
+	And(a=selIs00,b=a[6],out=a6andSelIs00);
+	And(a=selIs01,b=b[6],out=b6andSelIs01);
+	Or(a=a6andSelIs00,b=b6andSelIs01,out=a6orB6);
+	And(a=selIs10,b=c[6],out=c6andSelIs10);
+	And(a=selIs11,b=d[6],out=d6andSelIs11);
+	Or(a=c6andSelIs10,b=d6andSelIs11,out=c6orD6);
+	
+	Or(a=a6orB6,b=c6orD6,out=out[6]);
+	
+	//4 cases of sel and 7th inputs a-d DONE
+	And(a=selIs00,b=a[7],out=a7andSelIs00);
+	And(a=selIs01,b=b[7],out=b7andSelIs01);
+	Or(a=a7andSelIs00,b=b7andSelIs01,out=a7orB7);
+	And(a=selIs10,b=c[7],out=c7andSelIs10);
+	And(a=selIs11,b=d[7],out=d7andSelIs11);
+	Or(a=c7andSelIs10,b=d7andSelIs11,out=c7orD7);
+	
+	Or(a=a7orB7,b=c7orD7,out=out[7]);
+	
+	//4 cases of sel and 8th inputs a-d DONE
+	And(a=selIs00,b=a[8],out=a8andSelIs00);
+	And(a=selIs01,b=b[8],out=b8andSelIs01);
+	Or(a=a8andSelIs00,b=b8andSelIs01,out=a8orB8);
+	And(a=selIs10,b=c[8],out=c8andSelIs10);
+	And(a=selIs11,b=d[8],out=d8andSelIs11);
+	Or(a=c8andSelIs10,b=d8andSelIs11,out=c8orD8);
+	
+	Or(a=a8orB8,b=c8orD8,out=out[8]);
+	
+	//4 cases of sel and 9th inputs a-d DONE
+	And(a=selIs00,b=a[9],out=a9andSelIs00);
+	And(a=selIs01,b=b[9],out=b9andSelIs01);
+	Or(a=a9andSelIs00,b=b9andSelIs01,out=a9orB9);
+	And(a=selIs10,b=c[9],out=c9andSelIs10);
+	And(a=selIs11,b=d[9],out=d9andSelIs11);
+	Or(a=c9andSelIs10,b=d9andSelIs11,out=c9orD9);
+	
+	Or(a=a9orB9,b=c9orD9,out=out[9]);
+	
+	//4 cases of sel and 10th inputs a-d DONE
+	And(a=selIs00,b=a[10],out=a10andSelIs00);
+	And(a=selIs01,b=b[10],out=b10andSelIs01);
+	Or(a=a10andSelIs00,b=b10andSelIs01,out=a10orB10);
+	And(a=selIs10,b=c[10],out=c10andSelIs10);
+	And(a=selIs11,b=d[10],out=d10andSelIs11);
+	Or(a=c10andSelIs10,b=d10andSelIs11,out=c10orD10);
+	
+	Or(a=a10orB10,b=c10orD10,out=out[10]);
+	
+	//4 cases of sel and 11th inputs a-d DONE
+	And(a=selIs00,b=a[11],out=a11andSelIs00);
+	And(a=selIs01,b=b[11],out=b11andSelIs01);
+	Or(a=a11andSelIs00,b=b11andSelIs01,out=a11orB11);
+	And(a=selIs10,b=c[11],out=c11andSelIs10);
+	And(a=selIs11,b=d[11],out=d11andSelIs11);
+	Or(a=c11andSelIs10,b=d11andSelIs11,out=c11orD11);
+	
+	Or(a=a11orB11,b=c11orD11,out=out[11]);
+	
+	//4 cases of sel and 12th inputs a-d DONE
+	And(a=selIs00,b=a[12],out=a12andSelIs00);
+	And(a=selIs01,b=b[12],out=b12andSelIs01);
+	Or(a=a12andSelIs00,b=b12andSelIs01,out=a12orB12);
+	And(a=selIs10,b=c[12],out=c12andSelIs10);
+	And(a=selIs11,b=d[12],out=d12andSelIs11);
+	Or(a=c12andSelIs10,b=d12andSelIs11,out=c12orD12);
+	
+	Or(a=a12orB12,b=c12orD12,out=out[12]);
+	
+	//4 cases of sel and 13th inputs a-d DONE
+	And(a=selIs00,b=a[13],out=a13andSelIs00);
+	And(a=selIs01,b=b[13],out=b13andSelIs01);
+	Or(a=a13andSelIs00,b=b13andSelIs01,out=a13orB13);
+	And(a=selIs10,b=c[13],out=c13andSelIs10);
+	And(a=selIs11,b=d[13],out=d13andSelIs11);
+	Or(a=c13andSelIs10,b=d13andSelIs11,out=c13orD13);
+	
+	Or(a=a13orB13,b=c13orD13,out=out[13]);
+	
+	//4 cases of sel and 14th inputs a-d DONE
+	And(a=selIs00,b=a[14],out=a14andSelIs00);
+	And(a=selIs01,b=b[14],out=b14andSelIs01);
+	Or(a=a14andSelIs00,b=b14andSelIs01,out=a14orB14);
+	And(a=selIs10,b=c[14],out=c14andSelIs10);
+	And(a=selIs11,b=d[14],out=d14andSelIs11);
+	Or(a=c14andSelIs10,b=d14andSelIs11,out=c14orD14);
+	
+	Or(a=a14orB14,b=c14orD14,out=out[14]);
+	
+	//4 cases of sel and 15th inputs a-d DONE
+	And(a=selIs00,b=a[15],out=a15andSelIs00);
+	And(a=selIs01,b=b[15],out=b15andSelIs01);
+	Or(a=a15andSelIs00,b=b15andSelIs01,out=a15orB15);
+	And(a=selIs10,b=c[15],out=c15andSelIs10);
+	And(a=selIs11,b=d[15],out=d15andSelIs11);
+	Or(a=c15andSelIs10,b=d15andSelIs11,out=c15orD15);
+	
+	Or(a=a15orB15,b=c15orD15,out=out[15]);
+}
