@@ -57,7 +57,7 @@ CHIP ALU {
     And16(a=xMuxNx, b=yMuxNy, out=xAndY);
     Mux16(a=xAndY, b=xAddY, sel=f, out=AndAddmuxF);
 	
-    // no (f and not f, use inputs to muxify using sel no), ng(16th out from mux is negative value - if 1, is negative)
+    // no (f and not f, use inputs to muxify using sel no), ng(16th out from mux is negative value - if 1, out is negative)
     Not16(in=AndAddmuxF, out=notf);
     Mux16(a=AndAddmuxF, b=notf, sel=no, out[0..7]=outForZrOne, out[8..15]=outForZrTwo, out[15]=ng, out=out);
 
