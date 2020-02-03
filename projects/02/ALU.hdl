@@ -42,5 +42,28 @@ CHIP ALU {
         ng; // 1 if (out < 0),  0 otherwise
 
     PARTS:
-   // Put you code here:
+    // zx, x muxified & zy, y muxified
+    Mux16(a=x, b=false, sel=zx, out=xMuxZx);
+    Mux16(a=y, b=false, sel=zy, out=yMuxZy);
+	
+    // nx, x muxified & ny, y muxified
+    Not16(in=xMuxZx, out=notx);
+    Mux16(a=xMuxZx, b=notx, sel=nx, out=xMuxNx);
+    Not16(in=yMuxZy, out=noty);
+    Mux16(a=yMuxZy, b=noty, sel=ny, out=yMuxNy);
+	
+    // f (x and y, x add y, then mux both using sel f)
+    Add16(a=xMuxNx, b=yMuxNy, out=xAddY);
+    And16(a=xMuxNx, b=yMuxNy, out=xAndY);
+    Mux16(a=xAndY, b=xAddY, sel=f, out=AndAddmuxF);
+	
+    // no (f and not f, use inputs to muxify using sel no), ng(16th out from mux is negative value - if 1, is negative)
+    Not16(in=AndAddmuxF, out=notf);
+    Mux16(a=AndAddmuxF, b=notf, sel=no, out[0..7]=outForZrOne, out[8..15]=outForZrTwo, out[15]=ng, out=out);
+
+    //zr (1 iff out is 0)
+    Or8Way(in=outForZrOne, out=zrOne); //reduce 8 bits to 1
+    Or8Way(in=outForZrTwo, out=zrTwo); //reduce 8 bits to 1
+    Or(a=zrOne, b=zrTwo, out=outIsZero); //boil all down to 1 bit output
+    Not(in=outIsZero, out=zr);
 }
