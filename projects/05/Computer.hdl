@@ -19,5 +19,15 @@ CHIP Computer {
     IN reset;
 
     PARTS:
-    // Put your code here:
+	//relays all information
+	//resets when reset=1
+	
+	//program - list of instructions in assembly language
+	ROM32K(address=pc,out=instruction);
+	
+	//determines what to do with memory and instructions
+	CPU(inM=inM,instruction=instruction,reset=reset,outM=outM,writeM=writeM,addressM=addressM,pc=pc);
+	
+	//stores or gets from memory
+	Memory(in=outM,load=writeM,address=addressM,out=inM);
 }

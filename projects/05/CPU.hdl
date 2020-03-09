@@ -40,4 +40,87 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
+	//16 bit instruction: 111 a cccccc ddd jjj
+	// instruction[15] (1st element) 1 = C-instruction, 0 = A-instruction (with 15-bit value)
+	// instruction [14] and [13] are Op-code
+	//instruction[12] becomes selector(in mux) for A-register input or Memory input(inM)
+	//instruction[11] to [06] are c-instructions (ALU control bits)
+		//instruction[11] is zx
+		//instruction[10] is nx
+		//instruction[09] is zy
+		//instruction[08] is ny
+		//instruction[07] is f
+		//instruction[06] is no
+		//instruction[05] to [03] are destination load bits
+		//instruction[05] deals with the A-register
+		//instruction[04] deals with the D-register
+		//instruction[03] deals with writing out to Memory(writeM)
+	//instruction[02] to [00] are jump bits
+	
+    // i  _  _  a  c1 c2 c3 c4 c5 c6 d1 d2 d3 j1 j2 j3
+    // 15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00
+
+    //A-instruction
+	//instruction[15] == 0, A-instruction (C-instruction otherwise)
+    Not(in=instruction[15], out=isAinstruction);
+    Mux16(a=aluOut, b=instruction, sel=isAinstruction, out=AregInput);
+
+    Or(a=isAinstruction, b=instruction[05], out=storeInAregister);
+	
+	//0xxxxxxxxxxxxxxx A-instruction
+	//000xxxxxxxxxxxxx regular RAM starts at 0 to 16K
+	//010xxxxxxxxxxxxx screen starts at 16384
+	//011xxxxxxxxxxxxx keyboard starts at 24576
+    ARegister(in=AregInput, load=storeInAregister, out=Aregister, out[0..14]=addressM);
+
+    //C-instruction
+	//instruction[15] == 1, C-instruction (A-instruction otherwise)
+    // ALU takes input from DRegister and from ARegister or inM
+    And(a=instruction[15], b=instruction[12], out=AMSwitch);
+    Mux16(a=Aregister, b=inM, sel=AMSwitch, out=AM);
+
+    And(a=instruction[15], b=instruction[4], out=intoD);
+    DRegister(in=aluOut,load=intoD, out=Dregister);
+
+    ALU(x=Dregister, y=AM, out=aluOut, out=outM,
+        zx=instruction[11],
+        nx=instruction[10],
+        zy=instruction[09],
+        ny=instruction[08],
+        f=instruction[07],
+        no=instruction[06],
+
+        zr=zrOut,
+        ng=ngOut
+    );
+
+    // writeM uses 3rd destination load bit.
+    And(a=instruction[15], b=instruction[03], out=writeM);
+
+	//Jump logic
+	//instruction[02],[01],[00]
+    //000 no jump
+	//001 JGT; jump if out > 0
+	//010 JEQ; jump if out = 0
+	//011 JGE; jump if out >= 0
+	//100 JLT; jump if out < 0
+	//101 JNE; jump if out != 0
+	//110 JLE; jump if out <= 0
+	//111 JMP; always jump
+    Not(in=ngOut, out=notNGout);
+    Not(in=zrOut, out=notzr);
+    And(a=instruction[15], b=instruction[00], out=jgt);
+    And(a=notNGout, b=notzr, out=posnzr);
+    And(a=jgt, b=posnzr, out=load1);
+
+    And(a=instruction[15], b=instruction[01], out=jeq);
+    And(a=jeq, b=zrOut, out=load2);
+
+    And(a=instruction[15], b=instruction[02], out=jlt);
+    And(a=jlt, b=ngOut, out=load3);
+
+    Or(a=load1, b=load2, out=load1Or2); 
+    Or(a=load3, b=load1Or2, out=loadNextInstruction);
+
+    PC(in=Aregister, load=loadNextInstruction, inc=true, reset=reset, out[0..14]=pc);
 }
