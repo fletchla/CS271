@@ -27,5 +27,26 @@ CHIP Memory {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    
+	//last 2 elements of address indicate if ram1, ram2, keyboard, or screen
+	//splitting address 13&14 4 ways, first two splits go to RAM
+	DMux4Way(in=load, sel=address[13..14], a=goToRamA, b=goToRamB, c=sendLoadToScreen, d=loadkbd);
+	
+	//takes both RAM loads, both are used
+	Or(a=goToRamA, b=goToRamB, out=sendLoadToRam);
+	
+	// RAM starts at 0000, ends at 0011
+	//uses all but the last address
+    RAM16K(in=in, load=sendLoadToRam, address=address[0..13], out=ramOut);
+	
+	//  Screen starts at 0100 ends at 0101
+	//uses all but the last two addresses
+    Screen(in=in, load=sendLoadToScreen, address=address[0..12], out=screenOut);
+	
+	//Keyboard is 011
+	//keyboard magically gets load from DMux4Way chip, or that output goes nowhere
+    Keyboard(out=keyboardOut);
+	
+	//takes screen and keyboard and RAM and provides output for the CPU
+    Mux4Way16(a=ramOut, b=ramOut, c=screenOut, d=keyboardOut, sel=address[13..14], out=out);
 }
